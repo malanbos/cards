@@ -1,229 +1,71 @@
-# Internal helper functions for `ard_compare()`
+#' Compare ARDs
+#'
+#' @description
+#' `compare_ard()` compares columns of two ARDs row-by-row using a shared set
+#' of key columns. Rows where the column values differ are returned.
+#'
+#' @param x (`card`)\cr
+#'
+#'   first ARD to compare.
+#' @param y (`card`)\cr
+#'   second ARD to compare.
+#' @param keys ([`tidy-select`][dplyr::dplyr_tidy_select])\cr
+#'   columns identifying unique records. The intersection of the selected
+#'   columns in both ARDs is used. Default is
+#'   `c(all_ard_groups(), all_ard_variables(), any_of(c("variable", "variable_level", "stat_name")))`.
+#' @param compare ([`tidy-select`][dplyr::dplyr_tidy_select])\cr
+#'   columns to compare between the two ARDs. Default is
+#'   `any_of(c("stat_label", "stat", "stat_fmt"))`.
+#'
+#' @return a named list of class `"ard_comparison"` containing:
+#'
+#'   - `rows_in_x_not_y`: data frame of rows present in `x` but not in `y`
+#'     (based on key columns)
+#'   - `rows_in_y_not_x`: data frame of rows present in `y` but not in `x`
+#'     (based on key columns)
+#'   - `compare`: a named list where each element is a data frame containing
+#'     the key columns and the compared column values from both ARDs for rows
+#'     where values differ
+#'
+#' @export
+#'
+#' @examples
+#' ard_base <- ard_summary(ADSL, variables = AGE)
+#' ard_modified <- ard_summary(dplyr::mutate(ADSL, AGE = AGE + 1), variables = AGE)
+#'
+#' compare_ard(ard_base, ard_modified)$compare$stat
+#'
+compare_ard <- function(x,
+                        y,
+                        keys = c(all_ard_groups(), all_ard_variables(), any_of(c("variable", "variable_level", "stat_name"))),
+                        compare = any_of(c("stat_label", "stat", "stat_fmt"))) {
+  set_cli_abort_call()
 
-.format_key_value <- function(value) {
-  value <- value[[1]]
+  check_class(x, cls = "card")
+  check_class(y, cls = "card")
 
-  if (is.factor(value)) {
-    value <- as.character(value)
-  }
+  # process keys and compare arguments -----------------------------------------
+  keys <- .process_keys_arg(x, y, keys = {{ keys }})
+  compare <- .process_compare_arg(x, y, compare = {{ compare }})
 
-  if (is.character(value)) {
-    if (is.na(value)) {
-      return("NA")
-    }
-    return(encodeString(value, quote = "\""))
-  }
+  # check for duplicates in keys -----------------------------------------------
+  .check_keys_unique(x, keys, arg_name = "x")
+  .check_keys_unique(y, keys, arg_name = "y")
 
-  if (is.logical(value)) {
-    if (is.na(value)) {
-      return("NA")
-    }
-    return(if (value) "TRUE" else "FALSE")
-  }
+  # initialize results list ----------------------------------------------------
 
-  if (is.numeric(value)) {
-    if (is.na(value)) {
-      return("NA")
-    }
-    return(format(value, trim = TRUE))
-  }
+  results <- rlang::rep_named(c("rows_in_x_not_y", "rows_in_y_not_x"), list(NULL))
+  results[["compare"]] <- rlang::rep_named(compare, list(NULL))
 
-  if (inherits(value, "Date") || inherits(value, "POSIXt")) {
-    if (is.na(value)) {
-      return("NA")
-    }
-    return(encodeString(as.character(value), quote = "\""))
-  }
+  # find rows present in one ARD but not the other -----------------------------
+  results[["rows_in_x_not_y"]] <- .compare_rows(x, y, keys)
+  results[["rows_in_y_not_x"]] <- .compare_rows(y, x, keys)
 
-  value_chr <- as.character(value)
-  if (length(value_chr) == 0 || is.na(value_chr)) {
-    return("NA")
-  }
+  # compare columns and find mismatches ----------------------------------------
+  results[["compare"]] <- .compare_columns(x, y, keys, compare)
 
-  encodeString(value_chr, quote = "\"")
-}
-
-.format_duplicate_keys <- function(data, key_columns) {
-  key_data <- dplyr::select(data, dplyr::all_of(key_columns))
-  duplicated_rows <- duplicated(key_data) | duplicated(key_data, fromLast = TRUE)
-
-  if (!any(duplicated_rows)) {
-    return(character())
-  }
-
-  unique_duplicates <- unique(key_data[duplicated_rows, , drop = FALSE])
-
-  vapply(
-    seq_len(nrow(unique_duplicates)),
-    function(row_index) {
-      row <- unique_duplicates[row_index, , drop = FALSE]
-      formatted <- vapply(
-        names(row),
-        function(column) {
-          value <- row[[column]]
-          paste0(column, " = ", .format_key_value(value))
-        },
-        character(1)
-      )
-      paste(formatted, collapse = ", ")
-    },
-    character(1)
-  )
-}
-
-.duplicate_message <- function(arg_name, data, key_columns, key_origin) {
-  key_details <- .format_duplicate_keys(data, key_columns)
-  duplicate_header <- switch(key_origin,
-    intersection = cli::format_inline(
-      "The shared primary key columns do not uniquely identify rows in {.arg {arg_name}}.",
-      arg_name = arg_name
-    ),
-    cli::format_inline(
-      "Duplicate key combinations detected in {.arg {arg_name}}.",
-      arg_name = arg_name
-    )
-  )
-
-  column_detail <- switch(key_origin,
-    intersection = cli::format_inline(
-      "Columns used: {.val {key_columns}}.",
-      key_columns = key_columns
-    ),
-    user = cli::format_inline(
-      "Columns supplied via {.arg key_columns}: {.val {key_columns}}.",
-      key_columns = key_columns
-    ),
-    cli::format_inline(
-      "Columns used: {.val {key_columns}}.",
-      key_columns = key_columns
-    )
-  )
-
-  detail_lines <- if (length(key_details) > 0) {
-    paste0("  - ", key_details)
-  } else {
-    character()
-  }
-
-  cli::cli_abort(
-    paste(c(
-      duplicate_header,
-      column_detail,
-      detail_lines
-    ), collapse = "\n"),
-    call = get_cli_abort_call()
-  )
-}
-
-.check_key_identify_rows <- function(data, arg_name, key_columns, key_origin) {
-  if (anyDuplicated(dplyr::select(data, dplyr::all_of(key_columns))) > 0) {
-    .duplicate_message(
-      arg_name,
-      data,
-      key_columns,
-      key_origin
-    )
-  }
-
-  invisible(NULL)
-}
-
-.format_keys <- function(data, key_columns, limit = 5L) {
-  if (nrow(data) == 0) {
-    return(character())
-  }
-
-  limited <- utils::head(dplyr::select(data, dplyr::all_of(key_columns)), limit)
-  apply(
-    limited,
-    1,
-    function(row) {
-      paste(
-        vapply(
-          seq_along(row),
-          function(index) paste0(key_columns[[index]], " = ", .format_key_value(row[[index]])),
-          character(1)
-        ),
-        collapse = ", "
-      )
-    }
-  )
-}
-
-.check_rows_not_in_x_y <- function(x_data, y_data, key_columns) {
-  x_only <- dplyr::anti_join(x_data, y_data, by = key_columns)
-  y_only <- dplyr::anti_join(y_data, x_data, by = key_columns)
-
-  if (nrow(x_only) == 0 && nrow(y_only) == 0) {
-    return(invisible(NULL))
-  }
-
-  details <- c(
-    if (nrow(x_only) > 0) {
-      c(
-        cli::format_inline("Rows present only in {.arg x}: {nrow(x_only)}."),
-        paste0("  - ", .format_keys(x_only, key_columns))
-      )
-    },
-    if (nrow(y_only) > 0) {
-      c(
-        cli::format_inline("Rows present only in {.arg y}: {nrow(y_only)}."),
-        paste0("  - ", .format_keys(y_only, key_columns))
-      )
-    }
-  )
-
-  cli::cli_abort(
-    paste(
-      c(
-        "The input ARDs do not share the same records for the chosen keys.",
-        details
-      ),
-      collapse = "\n"
-    ),
-    call = get_cli_abort_call()
-  )
-}
-
-.ensure_column <- function(data, column) {
-  if (!column %in% names(data)) {
-    data[[column]] <- vector("list", nrow(data))
-  }
-  data
-}
-
-.build_mismatches <- function(comparison, column, key_columns) {
-  column_x <- paste0(column, ".x")
-  column_y <- paste0(column, ".y")
-
-  if (!all(c(column_x, column_y) %in% names(comparison))) {
-    empty <- comparison[0, , drop = FALSE]
-    missing_cols <- setdiff(c(column_x, column_y), names(empty))
-    for (missing_col in missing_cols) {
-      empty[[missing_col]] <- vector("list", 0)
-    }
-    return(
-      dplyr::select(
-        empty,
-        dplyr::all_of(c(key_columns, column_x, column_y))
-      )
-    )
-  }
-
-  matches <- mapply(
-    identical,
-    comparison[[column_x]],
-    comparison[[column_y]],
-    SIMPLIFY = TRUE,
-    USE.NAMES = FALSE
-  )
-
-  mismatches <- comparison[!matches, , drop = FALSE]
-
-  dplyr::select(
-    mismatches,
-    dplyr::all_of(c(key_columns, column_x, column_y))
-  )
+  # return results with class --------------------------------------------------
+  structure(results, class = c("ard_comparison", class(results)))
 }
 
 
