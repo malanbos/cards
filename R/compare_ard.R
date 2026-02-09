@@ -5,7 +5,6 @@
 #' of key columns. Rows where the column values differ are returned.
 #'
 #' @param x (`card`)\cr
-#'
 #'   first ARD to compare.
 #' @param y (`card`)\cr
 #'   second ARD to compare.
