@@ -215,13 +215,18 @@
   }
 
   # perform inner join to compare only matching rows
+  # perform inner join to compare only matching rows
   comparison <- dplyr::inner_join(
     x_selected,
     y_selected,
     by = keys,
     suffix = c(".x", ".y")
-  )
-
+  ) |> 
+    unlist_ard_columns()
+  
+  # Remove "cards" class from the object
+  class(comparison) <- setdiff(class(comparison), "card")
+  
   # build mismatch data frame for each compare column
   lapply(
     stats::setNames(compare, compare),
