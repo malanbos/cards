@@ -14,7 +14,6 @@ compare_ard(
 }
 \arguments{
 \item{x}{(\code{card})\cr
-
 first ARD to compare.}
 
 \item{y}{(\code{card})\cr
