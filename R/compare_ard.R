@@ -52,7 +52,6 @@ compare_ard <- function(x,
   .check_keys_unique(y, keys, arg_name = "y")
 
   # initialize results list ----------------------------------------------------
-
   results <- rlang::rep_named(c("rows_in_x_not_y", "rows_in_y_not_x"), list(NULL))
   results[["compare"]] <- rlang::rep_named(compare, list(NULL))
 
