@@ -15,6 +15,12 @@
 #' @param compare ([`tidy-select`][dplyr::dplyr_tidy_select])\cr
 #'   columns to compare between the two ARDs. Default is
 #'   `any_of(c("stat_label", "stat", "stat_fmt"))`.
+#' @param tolerance (`numeric(1)`)\cr
+#'   numeric tolerance passed to `all.equal()` for numeric comparisons.
+#'   Default is `sqrt(.Machine$double.eps)`.
+#' @param check.attributes (`logical(1)`)\cr
+#'   logical passed to `all.equal()` indicating whether object attributes
+#'   (e.g. names) should be compared. Default is `TRUE`.
 #'
 #' @return a named list of class `"ard_comparison"` containing:
 #'
@@ -23,21 +29,24 @@
 #'   - `rows_in_y_not_x`: data frame of rows present in `y` but not in `x`
 #'     (based on key columns)
 #'   - `compare`: a named list where each element is a data frame containing
-#'     the key columns and the compared column values from both ARDs for rows
-#'     where values differ
+#'     the key columns, the compared column values from both ARDs, and a
+#'     `difference` column with the `all.equal()` description for rows where
+#'     values differ
 #'
 #' @export
 #'
 #' @examples
-#' ard_base <- ard_summary(ADSL, variables = AGE)
-#' ard_modified <- ard_summary(dplyr::mutate(ADSL, AGE = AGE + 1), variables = AGE)
+#' ard_base <- ard_summary(ADSL, by = ARM, variables = AGE)
+#' ard_modified <- ard_summary(dplyr::mutate(ADSL, AGE = AGE + 1), by = ARM, variables = AGE)
 #'
 #' compare_ard(ard_base, ard_modified)$compare$stat
 #'
 compare_ard <- function(x,
                         y,
                         keys = c(all_ard_groups(), all_ard_variables(), any_of(c("variable", "variable_level", "stat_name"))),
-                        compare = any_of(c("stat_label", "stat", "stat_fmt"))) {
+                        compare = any_of(c("stat_label", "stat", "stat_fmt")),
+                        tolerance = sqrt(.Machine$double.eps),
+                        check.attributes = TRUE) {
   set_cli_abort_call()
 
   check_class(x, cls = "card")
@@ -60,7 +69,7 @@ compare_ard <- function(x,
   results[["rows_in_y_not_x"]] <- .compare_rows(y, x, keys)
 
   # compare columns and find mismatches ----------------------------------------
-  results[["compare"]] <- .compare_columns(x, y, keys, compare)
+  results[["compare"]] <- .compare_columns(x, y, keys, compare, tolerance, check.attributes)
 
   # return results with class --------------------------------------------------
   structure(results, class = c("ard_comparison", class(results)))

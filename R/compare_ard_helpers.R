@@ -199,7 +199,7 @@
 #' @return named list of data frames with mismatched rows
 #' @keywords internal
 #' @noRd
-.compare_columns <- function(x, y, keys, compare) {
+.compare_columns <- function(x, y, keys, compare, tolerance, check.attributes) {
   # select relevant columns
   x_selected <- dplyr::select(x, dplyr::all_of(keys), dplyr::any_of(compare))
   y_selected <- dplyr::select(y, dplyr::all_of(keys), dplyr::any_of(compare))
@@ -235,19 +235,23 @@
       column_y <- paste0(column, ".y")
 
       # find rows where values differ
-      matches <- mapply(
-        identical,
+      diffs <- mapply(
+        all.equal,
         comparison[[column_x]],
         comparison[[column_y]],
-        SIMPLIFY = TRUE,
+        MoreArgs = list(tolerance = tolerance, check.attributes = check.attributes),
+        SIMPLIFY = FALSE,
         USE.NAMES = FALSE
       )
 
-      mismatches <- comparison[!matches, , drop = FALSE]
+      is_equal <- vapply(diffs, isTRUE, logical(1))
+      mismatches <- comparison[!is_equal, , drop = FALSE]
+      mismatches$difference <- diffs[!is_equal]
 
       dplyr::select(
         mismatches,
-        dplyr::all_of(c(keys, column_x, column_y))
+        dplyr::all_of(c(keys, column_x, column_y)),
+        "difference"
       )
     }
   )
