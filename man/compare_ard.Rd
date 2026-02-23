@@ -56,9 +56,9 @@ values differ
 of key columns. Rows where the column values differ are returned.
 }
 \examples{
-ard_base <- ard_summary(ADSL, by = ARM, variables = AGE)
-ard_modified <- ard_summary(dplyr::mutate(ADSL, AGE = AGE + 1), by = ARM, variables = AGE)
+base <- ard_summary(ADSL, by = ARM, variables = AGE)
+compare <- ard_summary(dplyr::mutate(ADSL, AGE = AGE + 1), by = ARM, variables = AGE)
 
-compare_ard(ard_base, ard_modified)$compare$stat
+compare_ard(base, compare)$compare$stat
 
 }
