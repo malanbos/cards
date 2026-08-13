@@ -463,3 +463,37 @@ test_that("compare_ard detects differences in complex stat values from ard_ident
   result <- compare_ard(ard_base, ard_modified)
   expect_false(is_ard_equal(result))
 })
+
+test_that("compare_ard() resolves keys and columns against each ARD", {
+  ard <- ard_tabulate(ADSL, variables = SEX)
+
+  # the same ARD with its columns in a different order, as it may be returned
+  # from a source other than cards
+  ard_reordered <- dplyr::relocate(ard, "stat_label", .before = 1L)
+
+  expect_silent(result <- compare_ard(ard, ard_reordered))
+
+  expect_equal(result$keys, c("variable", "variable_level", "stat_name"))
+  expect_equal(result$columns, c("stat_label", "stat"))
+  expect_true(is_ard_equal(result))
+})
+
+test_that("compare_ard() accepts selectors combined with column names", {
+  # the same summary under two names for the treatment variable
+  ard_arm <- ard_summary(ADSL, by = ARM, variables = AGE)
+  ard_trt01a <- ard_summary(ADSL, by = TRT01A, variables = AGE)
+
+  expect_silent(
+    result <-
+      compare_ard(
+        ard_arm,
+        ard_trt01a,
+        keys = c(all_ard_groups("levels"), all_ard_variables(), "stat_name"),
+        columns = c(any_of("stat_label"), "stat")
+      )
+  )
+
+  expect_equal(result$keys, c("group1_level", "variable", "stat_name"))
+  expect_equal(result$columns, c("stat_label", "stat"))
+  expect_true(is_ard_equal(result))
+})

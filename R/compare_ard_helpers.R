@@ -8,8 +8,13 @@
 #' @keywords internal
 #' @noRd
 .process_keys_arg <- function(x, y, keys) {
-  keys_x <- cards_select({{ keys }}, data = x)
-  keys_y <- cards_select({{ keys }}, data = y)
+  # defuse the selection once, so that it is evaluated against each ARD in turn.
+  # evaluating `{{ keys }}` twice resolves the selection against `x` and then
+  # re-uses those column positions on `y`.
+  keys <- enquo(keys)
+
+  keys_x <- cards_select(expr = keys, data = x, arg_name = "keys")
+  keys_y <- cards_select(expr = keys, data = y, arg_name = "keys")
 
   .check_not_empty(keys_x)
 
@@ -36,8 +41,11 @@
 #' @keywords internal
 #' @noRd
 .process_compare_arg <- function(x, y, columns) {
-  columns_x <- cards_select({{ columns }}, data = x)
-  columns_y <- cards_select({{ columns }}, data = y)
+  # defused for the same reason as `keys` above
+  columns <- enquo(columns)
+
+  columns_x <- cards_select(expr = columns, data = x, arg_name = "columns")
+  columns_y <- cards_select(expr = columns, data = y, arg_name = "columns")
 
   .check_not_empty(columns_x)
   if (!setequal(columns_x, columns_y)) {
