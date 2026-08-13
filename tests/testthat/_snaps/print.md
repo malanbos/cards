@@ -165,3 +165,123 @@
       # i 4 more variables: context <chr>, stat_label <chr>,
       #   fmt_fun <list>, error <list>
 
+# print.compare_ard() works
+
+    Code
+      compare_ard(ard, ard)
+    Message
+      The comparison `keys` are "group1", "group1_level", "variable", "variable_level", and "stat_name".
+      The comparison columns are "stat_label" and "stat".
+      
+      -- Mis-matched Rows ------------------------------------------------------------
+      v No rows in `x` that do not appear in `y`.
+      v No rows in `y` that do not appear in `x`.
+      
+      -- Comparison Results ----------------------------------------------------------
+      v No differences found in column "stat_label".
+      v No differences found in column "stat".
+
+---
+
+    Code
+      compare_ard(ard, ard_subset)
+    Message
+      The comparison `keys` are "group1", "group1_level", "variable", "variable_level", and "stat_name".
+      The comparison columns are "stat_label" and "stat".
+      
+      -- Mis-matched Rows ------------------------------------------------------------
+      
+      -- Rows in `x` that do not appear in `y`. 
+    Output
+        group1         group1_level variable variable_level stat_name
+      1    ARM              Placebo   AGEGR1            >80         n
+      2    ARM              Placebo   AGEGR1            >80         N
+      3    ARM              Placebo   AGEGR1            >80         p
+      4    ARM Xanomeline High Dose   AGEGR1            >80         n
+      5    ARM Xanomeline High Dose   AGEGR1            >80         N
+      6    ARM Xanomeline High Dose   AGEGR1            >80         p
+      7    ARM  Xanomeline Low Dose   AGEGR1            >80         n
+      8    ARM  Xanomeline Low Dose   AGEGR1            >80         N
+      9    ARM  Xanomeline Low Dose   AGEGR1            >80         p
+    Message
+      v No rows in `y` that do not appear in `x`.
+      
+      -- Comparison Results ----------------------------------------------------------
+      v No differences found in column "stat_label".
+      ! Differences found in column "stat" for 12 rows.
+    Output
+         group1         group1_level variable variable_level stat_name    stat.x
+      1     ARM              Placebo   AGEGR1          65-80         N        86
+      2     ARM              Placebo   AGEGR1          65-80         p 0.4883721
+      3     ARM              Placebo   AGEGR1            <65         N        86
+      4     ARM              Placebo   AGEGR1            <65         p 0.1627907
+      5     ARM Xanomeline High Dose   AGEGR1          65-80         N        84
+      6     ARM Xanomeline High Dose   AGEGR1          65-80         p 0.6547619
+      7     ARM Xanomeline High Dose   AGEGR1            <65         N        84
+      8     ARM Xanomeline High Dose   AGEGR1            <65         p 0.1309524
+      9     ARM  Xanomeline Low Dose   AGEGR1          65-80         N        84
+      10    ARM  Xanomeline Low Dose   AGEGR1          65-80         p 0.5595238
+            stat.y                          difference
+      1         56 Mean relative difference: 0.3488372
+      2       0.75 Mean relative difference: 0.5357143
+      3         56 Mean relative difference: 0.3488372
+      4       0.25 Mean relative difference: 0.5357143
+      5         66 Mean relative difference: 0.2142857
+      6  0.8333333 Mean relative difference: 0.2727273
+      7         66 Mean relative difference: 0.2142857
+      8  0.1666667 Mean relative difference: 0.2727273
+      9         55 Mean relative difference: 0.3452381
+      10 0.8545455 Mean relative difference: 0.5272727
+
+---
+
+    Code
+      compare_ard(ard_subset, ard)
+    Message
+      The comparison `keys` are "group1", "group1_level", "variable", "variable_level", and "stat_name".
+      The comparison columns are "stat_label" and "stat".
+      
+      -- Mis-matched Rows ------------------------------------------------------------
+      v No rows in `x` that do not appear in `y`.
+      
+      -- Rows in `y` that do not appear in `x`. 
+    Output
+        group1         group1_level variable variable_level stat_name
+      1    ARM              Placebo   AGEGR1            >80         n
+      2    ARM              Placebo   AGEGR1            >80         N
+      3    ARM              Placebo   AGEGR1            >80         p
+      4    ARM Xanomeline High Dose   AGEGR1            >80         n
+      5    ARM Xanomeline High Dose   AGEGR1            >80         N
+      6    ARM Xanomeline High Dose   AGEGR1            >80         p
+      7    ARM  Xanomeline Low Dose   AGEGR1            >80         n
+      8    ARM  Xanomeline Low Dose   AGEGR1            >80         N
+      9    ARM  Xanomeline Low Dose   AGEGR1            >80         p
+    Message
+      
+      -- Comparison Results ----------------------------------------------------------
+      v No differences found in column "stat_label".
+      ! Differences found in column "stat" for 12 rows.
+    Output
+         group1         group1_level variable variable_level stat_name    stat.x
+      1     ARM              Placebo   AGEGR1          65-80         N        56
+      2     ARM              Placebo   AGEGR1          65-80         p      0.75
+      3     ARM              Placebo   AGEGR1            <65         N        56
+      4     ARM              Placebo   AGEGR1            <65         p      0.25
+      5     ARM Xanomeline High Dose   AGEGR1          65-80         N        66
+      6     ARM Xanomeline High Dose   AGEGR1          65-80         p 0.8333333
+      7     ARM Xanomeline High Dose   AGEGR1            <65         N        66
+      8     ARM Xanomeline High Dose   AGEGR1            <65         p 0.1666667
+      9     ARM  Xanomeline Low Dose   AGEGR1          65-80         N        55
+      10    ARM  Xanomeline Low Dose   AGEGR1          65-80         p 0.8545455
+            stat.y                          difference
+      1         86 Mean relative difference: 0.5357143
+      2  0.4883721 Mean relative difference: 0.3488372
+      3         86 Mean relative difference: 0.5357143
+      4  0.1627907 Mean relative difference: 0.3488372
+      5         84 Mean relative difference: 0.2727273
+      6  0.6547619 Mean relative difference: 0.2142857
+      7         84 Mean relative difference: 0.2727273
+      8  0.1309524 Mean relative difference: 0.2142857
+      9         84 Mean relative difference: 0.5272727
+      10 0.5595238 Mean relative difference: 0.3452381
+

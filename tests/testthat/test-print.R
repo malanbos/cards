@@ -61,3 +61,30 @@ test_that("print.card() keeps non-NULL warning/error columns when narrow", {
     print(ard, width = 60)
   )
 })
+
+test_that("print.compare_ard() works", {
+  ard <- ard_tabulate(ADSL, by = "ARM", variables = "AGEGR1")
+
+  # equal ARDs
+  expect_snapshot(
+    compare_ard(ard, ard)
+  )
+
+  # ARDs that differ in both their rows and their values: `x` holds the rows
+  # for the ">80" age group and `y` does not, and the percentages differ
+  ard_subset <-
+    ard_tabulate(
+      dplyr::filter(ADSL, AGEGR1 != ">80"),
+      by = "ARM",
+      variables = "AGEGR1"
+    )
+
+  expect_snapshot(
+    compare_ard(ard, ard_subset)
+  )
+
+  # rows in `y` that do not appear in `x`
+  expect_snapshot(
+    compare_ard(ard_subset, ard)
+  )
+})
