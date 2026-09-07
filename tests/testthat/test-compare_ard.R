@@ -511,3 +511,34 @@ test_that("compare_ard() error messages name the user-facing argument", {
   # renaming is not a valid selection here, as the names are used on both ARDs
   expect_snapshot(error = TRUE, compare_ard(ard, ard, keys = c(foo = variable)))
 })
+
+test_that("compare_ard() compares the columns present in both ARDs", {
+  ard <- ard_summary(ADSL, by = ARM, variables = AGE)
+  # `apply_fmt_fun()` adds `stat_fmt`, which the unformatted ARD does not have,
+  # so the default `columns` selection resolves differently in each ARD
+  ard_fmt <- apply_fmt_fun(ard)
+
+  expect_message(
+    result <- compare_ard(ard_fmt, ard),
+    "not present in both ARDs"
+  )
+
+  expect_equal(result$columns, c("stat_label", "stat"))
+  expect_true(is_ard_equal(result))
+
+  # no message when the two selections agree
+  expect_silent(compare_ard(ard, ard))
+})
+
+test_that("compare_ard() errors when the comparison columns have nothing in common", {
+  ard <- ard_summary(ADSL, by = ARM, variables = AGE)
+
+  expect_snapshot(
+    error = TRUE,
+    compare_ard(
+      dplyr::select(ard, -"stat"),
+      dplyr::select(ard, -"stat_label"),
+      columns = any_of(c("stat_label", "stat"))
+    )
+  )
+})

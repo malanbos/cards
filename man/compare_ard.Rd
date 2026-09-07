@@ -34,9 +34,10 @@ columns in both; otherwise an error is thrown. Default is
 \code{c(all_ard_groups(), all_ard_variables(), any_of(c("variable", "variable_level", "stat_name")))}.}
 
 \item{columns}{(\code{\link[dplyr:dplyr_tidy_select]{tidy-select}})\cr
-columns to compare between the two ARDs. As with \code{keys}, the
-selection is evaluated against each ARD and must resolve to the same
-set of columns in both. Default is
+columns to compare between the two ARDs. The selection is evaluated
+against each ARD, and the columns present in both are compared. When the
+two selections differ, a message reports the columns that were skipped;
+when they have nothing in common, an error is thrown. Default is
 \code{any_of(c("stat_label", "stat", "stat_fmt"))}.}
 
 \item{tolerance}{(\code{numeric(1)})\cr

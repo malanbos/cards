@@ -48,9 +48,15 @@
   columns_y <- cards_select(expr = columns, data = y, allow_rename = FALSE, arg_name = "columns")
 
   .check_not_empty(columns_x, arg_name = "columns")
-  if (!setequal(columns_x, columns_y)) {
+
+  # compare the columns the two ARDs have in common, so that an ARD carrying an
+  # optional column the other does not (e.g. `stat_fmt`, added by
+  # `apply_fmt_fun()`) can still be compared on the rest
+  columns_common <- intersect(columns_x, columns_y)
+
+  if (rlang::is_empty(columns_common)) {
     cli::cli_abort(
-      c("The comparison {.arg columns} from {.arg x} and {.arg y} do not match.",
+      c("The comparison {.arg columns} from {.arg x} and {.arg y} have no columns in common.",
         "i" = "Comparison {.arg columns} in {.arg x}: {.val {columns_x}}",
         "i" = "Comparison {.arg columns} in {.arg y}: {.val {columns_y}}"
       ),
@@ -58,7 +64,19 @@
     )
   }
 
-  columns_x
+  if (!setequal(columns_x, columns_y)) {
+    only_x <- setdiff(columns_x, columns_y)
+    only_y <- setdiff(columns_y, columns_x)
+    cli::cli_inform(
+      c(
+        "!" = "Some comparison {.arg columns} are not present in both ARDs and are not compared.",
+        if (!rlang::is_empty(only_x)) c("i" = "Not present in {.arg y}: {.val {only_x}}"),
+        if (!rlang::is_empty(only_y)) c("i" = "Not present in {.arg x}: {.val {only_y}}")
+      )
+    )
+  }
+
+  columns_common
 }
 
 #' Check Argument is Not Empty

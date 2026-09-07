@@ -34,3 +34,14 @@
       ! Can't rename variables in this context.
       i Select among columns "variable", "variable_level", "context", "stat_name", "stat_label", "stat", "fmt_fun", "warning", and "error"
 
+# compare_ard() errors when the comparison columns have nothing in common
+
+    Code
+      compare_ard(dplyr::select(ard, -"stat"), dplyr::select(ard, -"stat_label"),
+      columns = any_of(c("stat_label", "stat")))
+    Condition
+      Error in `compare_ard()`:
+      ! The comparison `columns` from `x` and `y` have no columns in common.
+      i Comparison `columns` in `x`: "stat_label"
+      i Comparison `columns` in `y`: "stat"
+

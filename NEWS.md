@@ -8,6 +8,8 @@
 
 * Fixed a bug in `compare_ard()` where the `keys` and `columns` arguments were not evaluated as tidyselect expressions: the selection was resolved against `x` alone and the resulting column positions were re-used on `y`. Each selection is now evaluated against both ARDs, so ARDs holding the same columns in a different order can be compared, and selecting functions may be combined with column names, e.g. `keys = c(all_ard_groups("levels"), "stat_name")`. (#606, @malanbos)
 
+* `compare_ard()` now compares the `columns` the two ARDs have in common, rather than erroring when the selection resolves to a different set in each. Comparing a formatted ARD against an unformatted one, for example, previously failed on the default `columns` because `apply_fmt_fun()` adds `stat_fmt`; the shared columns are now compared and a message reports those that were skipped. An error is still thrown when the two selections have nothing in common, and `keys` must still resolve to the same columns in both ARDs. (#606)
+
 # cards 0.9.0
 
 ## Performance
