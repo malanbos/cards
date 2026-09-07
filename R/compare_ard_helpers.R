@@ -13,10 +13,10 @@
   # re-uses those column positions on `y`.
   keys <- enquo(keys)
 
-  keys_x <- cards_select(expr = keys, data = x, arg_name = "keys")
-  keys_y <- cards_select(expr = keys, data = y, arg_name = "keys")
+  keys_x <- cards_select(expr = keys, data = x, allow_rename = FALSE, arg_name = "keys")
+  keys_y <- cards_select(expr = keys, data = y, allow_rename = FALSE, arg_name = "keys")
 
-  .check_not_empty(keys_x)
+  .check_not_empty(keys_x, arg_name = "keys")
 
   if (!setequal(keys_x, keys_y)) {
     cli::cli_abort(
@@ -44,10 +44,10 @@
   # defused for the same reason as `keys` above
   columns <- enquo(columns)
 
-  columns_x <- cards_select(expr = columns, data = x, arg_name = "columns")
-  columns_y <- cards_select(expr = columns, data = y, arg_name = "columns")
+  columns_x <- cards_select(expr = columns, data = x, allow_rename = FALSE, arg_name = "columns")
+  columns_y <- cards_select(expr = columns, data = y, allow_rename = FALSE, arg_name = "columns")
 
-  .check_not_empty(columns_x)
+  .check_not_empty(columns_x, arg_name = "columns")
   if (!setequal(columns_x, columns_y)) {
     cli::cli_abort(
       c("The comparison {.arg columns} from {.arg x} and {.arg y} do not match.",

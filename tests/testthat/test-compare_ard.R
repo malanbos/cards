@@ -497,3 +497,17 @@ test_that("compare_ard() accepts selectors combined with column names", {
   expect_equal(result$columns, c("stat_label", "stat"))
   expect_true(is_ard_equal(result))
 })
+
+test_that("compare_ard() error messages name the user-facing argument", {
+  ard <- ard_tabulate(ADSL, variables = SEX)
+
+  # `.check_not_empty()` reports `keys`/`columns`, not the internal locals
+  expect_snapshot(error = TRUE, compare_ard(ard, ard, keys = any_of("not_a_column")))
+  expect_snapshot(error = TRUE, compare_ard(ard, ard, columns = any_of("not_a_column")))
+
+  # an unusable selection names the argument it came from
+  expect_snapshot(error = TRUE, compare_ard(ard, ard, keys = not_a_column))
+
+  # renaming is not a valid selection here, as the names are used on both ARDs
+  expect_snapshot(error = TRUE, compare_ard(ard, ard, keys = c(foo = variable)))
+})
