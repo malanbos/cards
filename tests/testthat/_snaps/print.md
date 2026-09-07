@@ -193,16 +193,18 @@
       
       -- Rows in `x` that do not appear in `y`. 
     Output
-        group1         group1_level variable variable_level stat_name
-      1    ARM              Placebo   AGEGR1            >80         n
-      2    ARM              Placebo   AGEGR1            >80         N
-      3    ARM              Placebo   AGEGR1            >80         p
-      4    ARM Xanomeline High Dose   AGEGR1            >80         n
-      5    ARM Xanomeline High Dose   AGEGR1            >80         N
-      6    ARM Xanomeline High Dose   AGEGR1            >80         p
-      7    ARM  Xanomeline Low Dose   AGEGR1            >80         n
-      8    ARM  Xanomeline Low Dose   AGEGR1            >80         N
-      9    ARM  Xanomeline Low Dose   AGEGR1            >80         p
+      # An ARD data frame: 9 x 5
+        group1 group1_level         variable variable_level stat_name
+        <chr>  <list>               <chr>    <list>         <chr>    
+      1 ARM    Placebo              AGEGR1   >80            n        
+      2 ARM    Placebo              AGEGR1   >80            N        
+      3 ARM    Placebo              AGEGR1   >80            p        
+      4 ARM    Xanomeline High Dose AGEGR1   >80            n        
+      5 ARM    Xanomeline High Dose AGEGR1   >80            N        
+      6 ARM    Xanomeline High Dose AGEGR1   >80            p        
+      7 ARM    Xanomeline Low Dose  AGEGR1   >80            n        
+      8 ARM    Xanomeline Low Dose  AGEGR1   >80            N        
+      9 ARM    Xanomeline Low Dose  AGEGR1   >80            p        
     Message
       v No rows in `y` that do not appear in `x`.
       
@@ -246,16 +248,18 @@
       
       -- Rows in `y` that do not appear in `x`. 
     Output
-        group1         group1_level variable variable_level stat_name
-      1    ARM              Placebo   AGEGR1            >80         n
-      2    ARM              Placebo   AGEGR1            >80         N
-      3    ARM              Placebo   AGEGR1            >80         p
-      4    ARM Xanomeline High Dose   AGEGR1            >80         n
-      5    ARM Xanomeline High Dose   AGEGR1            >80         N
-      6    ARM Xanomeline High Dose   AGEGR1            >80         p
-      7    ARM  Xanomeline Low Dose   AGEGR1            >80         n
-      8    ARM  Xanomeline Low Dose   AGEGR1            >80         N
-      9    ARM  Xanomeline Low Dose   AGEGR1            >80         p
+      # An ARD data frame: 9 x 5
+        group1 group1_level         variable variable_level stat_name
+        <chr>  <list>               <chr>    <list>         <chr>    
+      1 ARM    Placebo              AGEGR1   >80            n        
+      2 ARM    Placebo              AGEGR1   >80            N        
+      3 ARM    Placebo              AGEGR1   >80            p        
+      4 ARM    Xanomeline High Dose AGEGR1   >80            n        
+      5 ARM    Xanomeline High Dose AGEGR1   >80            N        
+      6 ARM    Xanomeline High Dose AGEGR1   >80            p        
+      7 ARM    Xanomeline Low Dose  AGEGR1   >80            n        
+      8 ARM    Xanomeline Low Dose  AGEGR1   >80            N        
+      9 ARM    Xanomeline Low Dose  AGEGR1   >80            p        
     Message
       
       -- Comparison Results ----------------------------------------------------------
@@ -284,4 +288,109 @@
       8  0.1309524 Mean relative difference: 0.2142857
       9         84 Mean relative difference: 0.5272727
       10 0.5595238 Mean relative difference: 0.3452381
+
+# print.compare_ard() prints both mis-matched row blocks
+
+    Code
+      compare_ard(ard_no_high, ard_no_low)
+    Message
+      The comparison `keys` are "group1", "group1_level", "variable", "variable_level", and "stat_name".
+      The comparison columns are "stat_label" and "stat".
+      
+      -- Mis-matched Rows ------------------------------------------------------------
+      
+      -- Rows in `x` that do not appear in `y`. 
+    Output
+      # An ARD data frame: 9 x 5
+        group1 group1_level         variable variable_level stat_name
+        <chr>  <list>               <chr>    <list>         <chr>    
+      1 ARM    Placebo              AGEGR1   <65            n        
+      2 ARM    Placebo              AGEGR1   <65            N        
+      3 ARM    Placebo              AGEGR1   <65            p        
+      4 ARM    Xanomeline High Dose AGEGR1   <65            n        
+      5 ARM    Xanomeline High Dose AGEGR1   <65            N        
+      6 ARM    Xanomeline High Dose AGEGR1   <65            p        
+      7 ARM    Xanomeline Low Dose  AGEGR1   <65            n        
+      8 ARM    Xanomeline Low Dose  AGEGR1   <65            N        
+      9 ARM    Xanomeline Low Dose  AGEGR1   <65            p        
+    Message
+      
+      -- Rows in `y` that do not appear in `x`. 
+    Output
+      # An ARD data frame: 9 x 5
+        group1 group1_level         variable variable_level stat_name
+        <chr>  <list>               <chr>    <list>         <chr>    
+      1 ARM    Placebo              AGEGR1   >80            n        
+      2 ARM    Placebo              AGEGR1   >80            N        
+      3 ARM    Placebo              AGEGR1   >80            p        
+      4 ARM    Xanomeline High Dose AGEGR1   >80            n        
+      5 ARM    Xanomeline High Dose AGEGR1   >80            N        
+      6 ARM    Xanomeline High Dose AGEGR1   >80            p        
+      7 ARM    Xanomeline Low Dose  AGEGR1   >80            n        
+      8 ARM    Xanomeline Low Dose  AGEGR1   >80            N        
+      9 ARM    Xanomeline Low Dose  AGEGR1   >80            p        
+    Message
+      
+      -- Comparison Results ----------------------------------------------------------
+      v No differences found in column "stat_label".
+      ! Differences found in column "stat" for 6 rows.
+    Output
+        group1         group1_level variable variable_level stat_name    stat.x
+      1    ARM              Placebo   AGEGR1          65-80         N        56
+      2    ARM              Placebo   AGEGR1          65-80         p      0.75
+      3    ARM Xanomeline High Dose   AGEGR1          65-80         N        66
+      4    ARM Xanomeline High Dose   AGEGR1          65-80         p 0.8333333
+      5    ARM  Xanomeline Low Dose   AGEGR1          65-80         N        55
+      6    ARM  Xanomeline Low Dose   AGEGR1          65-80         p 0.8545455
+           stat.y                           difference
+      1        72  Mean relative difference: 0.2857143
+      2 0.5833333  Mean relative difference: 0.2222222
+      3        73  Mean relative difference: 0.1060606
+      4 0.7534247 Mean relative difference: 0.09589041
+      5        76  Mean relative difference: 0.3818182
+      6 0.6184211  Mean relative difference: 0.2763158
+
+# print.compare_ard() truncates long mis-matched row blocks
+
+    Code
+      compare_ard(ard, ard_two_sites)
+    Message
+      The comparison `keys` are "variable", "variable_level", and "stat_name".
+      The comparison columns are "stat_label" and "stat".
+      
+      -- Mis-matched Rows ------------------------------------------------------------
+      
+      -- Rows in `x` that do not appear in `y`. 
+    Output
+      # An ARD data frame: 45 x 3
+         variable variable_level stat_name
+         <chr>    <list>         <chr>    
+       1 SITEID   702            n        
+       2 SITEID   702            N        
+       3 SITEID   702            p        
+       4 SITEID   704            n        
+       5 SITEID   704            N        
+       6 SITEID   704            p        
+       7 SITEID   705            n        
+       8 SITEID   705            N        
+       9 SITEID   705            p        
+      10 SITEID   706            n        
+      # i 35 more rows
+    Message
+      v No rows in `y` that do not appear in `x`.
+      
+      -- Comparison Results ----------------------------------------------------------
+      v No differences found in column "stat_label".
+      ! Differences found in column "stat" for 4 rows.
+    Output
+        variable variable_level stat_name     stat.x    stat.y
+      1   SITEID            701         N        254        59
+      2   SITEID            701         p  0.1614173 0.6949153
+      3   SITEID            703         N        254        59
+      4   SITEID            703         p 0.07086614 0.3050847
+                                 difference
+      1 Mean relative difference: 0.7677165
+      2  Mean relative difference: 3.305085
+      3 Mean relative difference: 0.7677165
+      4  Mean relative difference: 3.305085
 

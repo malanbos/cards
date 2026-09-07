@@ -1,5 +1,11 @@
 # cards 0.9.0.9000
 
+## Bug Fixes
+
+* Fixed a bug in `print.compare_ard()` where the rows present in `x` but not in `y` were announced and then not printed. (#605, @malanbos)
+
+* The mis-matched row blocks of `print.compare_ard()` now print through the ARD print method rather than being coerced with `as.data.frame()`, so scalar list-column values (e.g. `group1_level`, `variable_level`) are shown and long blocks are truncated with a row count in the footer. (#605)
+
 # cards 0.9.0
 
 ## Performance

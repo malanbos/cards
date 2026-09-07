@@ -182,13 +182,13 @@ print.compare_ard <- function(x, ...) {
     cli::cli_alert_success("No rows in {.arg x} that do not appear in {.arg y}.")
   } else {
     cli::cli_h3("Rows in {.arg x} that do not appear in {.arg y}.")
-    as.data.frame(x$rows_in_x_not_y) |> print()
+    print(x$rows_in_x_not_y)
   }
   if (nrow(x$rows_in_y_not_x) == 0L) {
     cli::cli_alert_success("No rows in {.arg y} that do not appear in {.arg x}.")
   } else {
     cli::cli_h3("Rows in {.arg y} that do not appear in {.arg x}.")
-    as.data.frame(x$rows_in_y_not_x) |> print()
+    print(x$rows_in_y_not_x)
   }
 
   # print comparison results ---------------------------------------------------
