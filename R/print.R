@@ -172,6 +172,10 @@ tbl_format_setup.card <- function(x, width = NULL, ...) {
 #' @export
 #' @rdname print.card
 print.compare_ard <- function(x, ...) {
+  # sub-headers sit directly beneath their section rule; the div closes itself
+  # when this function exits
+  cli::cli_div(theme = list(h3 = list("margin-top" = 0)))
+
   # print comparison details ---------------------------------------------------
   cli::cli_inform("The comparison {.arg keys} are {.val {x$keys}}.")
   cli::cli_inform("The comparison columns are {.val {x$columns}}.")

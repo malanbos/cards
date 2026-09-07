@@ -190,7 +190,6 @@
       The comparison columns are "stat_label" and "stat".
       
       -- Mis-matched Rows ------------------------------------------------------------
-      
       -- Rows in `x` that do not appear in `y`. 
     Output
       # An ARD data frame: 9 x 5
@@ -237,7 +236,6 @@
       
       -- Mis-matched Rows ------------------------------------------------------------
       v No rows in `x` that do not appear in `y`.
-      
       -- Rows in `y` that do not appear in `x`. 
     Output
       # An ARD data frame: 9 x 5
@@ -282,7 +280,6 @@
       The comparison columns are "stat_label" and "stat".
       
       -- Mis-matched Rows ------------------------------------------------------------
-      
       -- Rows in `x` that do not appear in `y`. 
     Output
       # An ARD data frame: 9 x 5
@@ -298,7 +295,6 @@
       8 ARM    Xanomeline Low Dose  AGEGR1   <65            N        
       9 ARM    Xanomeline Low Dose  AGEGR1   <65            p        
     Message
-      
       -- Rows in `y` that do not appear in `x`. 
     Output
       # An ARD data frame: 9 x 5
@@ -338,7 +334,6 @@
       The comparison columns are "stat_label" and "stat".
       
       -- Mis-matched Rows ------------------------------------------------------------
-      
       -- Rows in `x` that do not appear in `y`. 
     Output
       # An ARD data frame: 45 x 3
