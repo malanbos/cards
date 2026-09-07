@@ -63,6 +63,10 @@ test_that("print.card() keeps non-NULL warning/error columns when narrow", {
 })
 
 test_that("print.compare_ard() works", {
+  # widen the console so the comparison tables print in one piece rather than
+  # being split into column chunks by `print.data.frame()`
+  withr::local_options(width = 200)
+
   ard <- ard_tabulate(ADSL, by = "ARM", variables = "AGEGR1")
 
   # equal ARDs
@@ -90,6 +94,10 @@ test_that("print.compare_ard() works", {
 })
 
 test_that("print.compare_ard() prints both mis-matched row blocks", {
+  # widen the console so the comparison tables print in one piece rather than
+  # being split into column chunks by `print.data.frame()`
+  withr::local_options(width = 200)
+
   # each ARD holds an age group the other does not, so both blocks print
   ard_no_high <-
     ard_tabulate(
@@ -136,6 +144,10 @@ test_that("print.compare_ard() prints the mis-matched rows themselves (#605)", {
 })
 
 test_that("print.compare_ard() truncates long mis-matched row blocks", {
+  # widen the console so the comparison tables print in one piece rather than
+  # being split into column chunks by `print.data.frame()`
+  withr::local_options(width = 200)
+
   # 17 sites x 3 statistics, of which only two sites survive the filter, so the
   # block is far longer than the console can hold and is truncated by the ARD
   # print method with the withheld row count in the footer
