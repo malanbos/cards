@@ -229,16 +229,6 @@
   x <- x[c(keys, compare)]
   y <- y[c(keys, compare)]
 
-  # ensure all compare columns exist in both data frames
-  for (column in compare) {
-    if (!column %in% names(x)) {
-      x[[column]] <- vector("list", nrow(x))
-    }
-    if (!column %in% names(y)) {
-      y[[column]] <- vector("list", nrow(y))
-    }
-  }
-
   # perform inner join to compare only matching rows
   comparison <- dplyr::inner_join(
     x,
