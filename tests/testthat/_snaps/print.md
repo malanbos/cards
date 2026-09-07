@@ -212,19 +212,20 @@
       ! Differences found in column "stat" for 12 rows.
     Output
       # An ARD data frame: 12 x 8
-         group1 group1_level         variable variable_level stat_name stat.x stat.y difference                         
-         <chr>  <list>               <chr>    <list>         <chr>     <list> <list> <list>                             
-       1 ARM    Placebo              AGEGR1   65-80          N         86     56     Mean relative difference: 0.3488372
-       2 ARM    Placebo              AGEGR1   65-80          p          0.488  0.75  Mean relative difference: 0.5357143
-       3 ARM    Placebo              AGEGR1   <65            N         86     56     Mean relative difference: 0.3488372
-       4 ARM    Placebo              AGEGR1   <65            p          0.163  0.25  Mean relative difference: 0.5357143
-       5 ARM    Xanomeline High Dose AGEGR1   65-80          N         84     66     Mean relative difference: 0.2142857
-       6 ARM    Xanomeline High Dose AGEGR1   65-80          p          0.655  0.833 Mean relative difference: 0.2727273
-       7 ARM    Xanomeline High Dose AGEGR1   <65            N         84     66     Mean relative difference: 0.2142857
-       8 ARM    Xanomeline High Dose AGEGR1   <65            p          0.131  0.167 Mean relative difference: 0.2727273
-       9 ARM    Xanomeline Low Dose  AGEGR1   65-80          N         84     55     Mean relative difference: 0.3452381
-      10 ARM    Xanomeline Low Dose  AGEGR1   65-80          p          0.560  0.855 Mean relative difference: 0.5272727
-      # i 2 more rows
+         group1 group1_level         variable variable_level stat_name  stat.x stat.y difference                         
+         <chr>  <list>               <chr>    <list>         <chr>      <list> <list> <list>                             
+       1 ARM    Placebo              AGEGR1   65-80          N         86      56     Mean relative difference: 0.3488372
+       2 ARM    Placebo              AGEGR1   65-80          p          0.488   0.75  Mean relative difference: 0.5357143
+       3 ARM    Placebo              AGEGR1   <65            N         86      56     Mean relative difference: 0.3488372
+       4 ARM    Placebo              AGEGR1   <65            p          0.163   0.25  Mean relative difference: 0.5357143
+       5 ARM    Xanomeline High Dose AGEGR1   65-80          N         84      66     Mean relative difference: 0.2142857
+       6 ARM    Xanomeline High Dose AGEGR1   65-80          p          0.655   0.833 Mean relative difference: 0.2727273
+       7 ARM    Xanomeline High Dose AGEGR1   <65            N         84      66     Mean relative difference: 0.2142857
+       8 ARM    Xanomeline High Dose AGEGR1   <65            p          0.131   0.167 Mean relative difference: 0.2727273
+       9 ARM    Xanomeline Low Dose  AGEGR1   65-80          N         84      55     Mean relative difference: 0.3452381
+      10 ARM    Xanomeline Low Dose  AGEGR1   65-80          p          0.560   0.855 Mean relative difference: 0.5272727
+      11 ARM    Xanomeline Low Dose  AGEGR1   <65            N         84      55     Mean relative difference: 0.3452381
+      12 ARM    Xanomeline Low Dose  AGEGR1   <65            p          0.0952  0.145 Mean relative difference: 0.5272727
 
 ---
 
@@ -257,19 +258,20 @@
       ! Differences found in column "stat" for 12 rows.
     Output
       # An ARD data frame: 12 x 8
-         group1 group1_level         variable variable_level stat_name stat.x stat.y difference                         
-         <chr>  <list>               <chr>    <list>         <chr>     <list> <list> <list>                             
-       1 ARM    Placebo              AGEGR1   65-80          N         56     86     Mean relative difference: 0.5357143
-       2 ARM    Placebo              AGEGR1   65-80          p          0.75   0.488 Mean relative difference: 0.3488372
-       3 ARM    Placebo              AGEGR1   <65            N         56     86     Mean relative difference: 0.5357143
-       4 ARM    Placebo              AGEGR1   <65            p          0.25   0.163 Mean relative difference: 0.3488372
-       5 ARM    Xanomeline High Dose AGEGR1   65-80          N         66     84     Mean relative difference: 0.2727273
-       6 ARM    Xanomeline High Dose AGEGR1   65-80          p          0.833  0.655 Mean relative difference: 0.2142857
-       7 ARM    Xanomeline High Dose AGEGR1   <65            N         66     84     Mean relative difference: 0.2727273
-       8 ARM    Xanomeline High Dose AGEGR1   <65            p          0.167  0.131 Mean relative difference: 0.2142857
-       9 ARM    Xanomeline Low Dose  AGEGR1   65-80          N         55     84     Mean relative difference: 0.5272727
-      10 ARM    Xanomeline Low Dose  AGEGR1   65-80          p          0.855  0.560 Mean relative difference: 0.3452381
-      # i 2 more rows
+         group1 group1_level         variable variable_level stat_name stat.x  stat.y difference                         
+         <chr>  <list>               <chr>    <list>         <chr>     <list>  <list> <list>                             
+       1 ARM    Placebo              AGEGR1   65-80          N         56     86      Mean relative difference: 0.5357143
+       2 ARM    Placebo              AGEGR1   65-80          p          0.75   0.488  Mean relative difference: 0.3488372
+       3 ARM    Placebo              AGEGR1   <65            N         56     86      Mean relative difference: 0.5357143
+       4 ARM    Placebo              AGEGR1   <65            p          0.25   0.163  Mean relative difference: 0.3488372
+       5 ARM    Xanomeline High Dose AGEGR1   65-80          N         66     84      Mean relative difference: 0.2727273
+       6 ARM    Xanomeline High Dose AGEGR1   65-80          p          0.833  0.655  Mean relative difference: 0.2142857
+       7 ARM    Xanomeline High Dose AGEGR1   <65            N         66     84      Mean relative difference: 0.2727273
+       8 ARM    Xanomeline High Dose AGEGR1   <65            p          0.167  0.131  Mean relative difference: 0.2142857
+       9 ARM    Xanomeline Low Dose  AGEGR1   65-80          N         55     84      Mean relative difference: 0.5272727
+      10 ARM    Xanomeline Low Dose  AGEGR1   65-80          p          0.855  0.560  Mean relative difference: 0.3452381
+      11 ARM    Xanomeline Low Dose  AGEGR1   <65            N         55     84      Mean relative difference: 0.5272727
+      12 ARM    Xanomeline Low Dose  AGEGR1   <65            p          0.145  0.0952 Mean relative difference: 0.3452381
 
 # print.compare_ard() prints both mis-matched row blocks
 

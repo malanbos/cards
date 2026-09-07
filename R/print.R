@@ -203,7 +203,7 @@ print.compare_ard <- function(x, ...) {
       next
     }
     cli::cli_alert_warning("Differences found in column {.val {names(x$comparison[i])}} for {.val {nrow(x$comparison[[i]])}} rows.")
-    print(x$comparison[[i]], n = 10)
+    print(x$comparison[[i]])
   }
 
   # return input invisibly -----------------------------------------------------
